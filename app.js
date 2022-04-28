@@ -260,6 +260,7 @@ function getImagesFromDir(dirPath){
       allImages.push('static/'+file)
     }
   }
+  //hi
   return allImages
 
 }
