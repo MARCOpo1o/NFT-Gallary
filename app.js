@@ -17,6 +17,8 @@ const debug = require("debug")("personalapp:server");
 const layouts = require("express-ejs-layouts");
 const auth = require("./routes/auth");
 
+const NFT = require("./models/NFT");
+
 
 const mongoose = require( 'mongoose' );
 const mongodb_URI = 'mongodb+srv://marco:v14GdSEFL1kIFVwo@cluster0.nb4az.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
@@ -166,6 +168,7 @@ function checkFileType(file, cb){
 }
 
 
+
 app.post('/upload', (req, res) => {
   upload(req, res, (err) => {
     if(err){
@@ -203,6 +206,32 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+//functions to upload the form
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.resolve(__dirname, 'public')));
+
+app.post('/nft/save', (req, res, next) => {
+  const {nft} = req.body;
+  storeNFT(nft);
+  res.render('about')
+});
+
+async function storeNFT(nft){
+  try{
+    const lookup = await NFT.find({nft})
+    if (lookup.length==0){
+      const new_nft = new NFT({nft})
+      await new_nft.save()
+      console.log(nft)
+    }
+  }
+  catch(e){
+    next(e)
+  }
+}
+
+
 
 
 //functions to see the uploaded images
@@ -244,6 +273,7 @@ app.set("port", port);
 
 // and now we startup the server listening on that port
 const http = require("http");
+const { render } = require("ejs");
 const server = http.createServer(app);
 
 server.listen(port);
