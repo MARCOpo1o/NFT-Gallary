@@ -13,3 +13,5 @@ This app showcases NFT and have people rate it.
 
 
 ### create a short 2-5 minute video pitching your app idea and giving a demo of your "proof of concept"
+
+  [Video Link](https://drive.google.com/file/d/1XwETyfJflDE8gcOaGy80J_7Fn5rU8BWg/view?usp=sharing)
