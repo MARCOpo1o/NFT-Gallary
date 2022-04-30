@@ -168,27 +168,33 @@ function checkFileType(file, cb){
 }
 
 
-
-app.post('/upload', (req, res) => {
-  upload(req, res, (err) => {
-    if(err){
-      res.render('index', {
-        msg: err
-      });
-    } else {
-      if(req.file == undefined){
-        res.render('index', {
-          msg: 'Error: No File Selected!'
-        });
-      } else {
-        res.render('secret', {
-          msg: 'File Uploaded!',
-          file: `Users/${req.file.filename}`
-        });
-      }
-    }
-  });
+app.post('/nft/save', (req, res, next) => {
+  const {nft} = req.body;
+  console.log(nft)
+  storeNFT(nft);
+  res.render('index')
 });
+
+// app.post('/upload', (req, res) => {
+//   upload(req, res, (err) => {
+//     if(err){
+//       res.render('index', {
+//         msg: err
+//       });
+//     } else {
+//       if(req.file == undefined){
+//         res.render('index', {
+//           msg: 'Error: No File Selected!'
+//         });
+//       } else {
+//         res.render('secret', {
+//           msg: 'File Uploaded!',
+//           file: `Users/${req.file.filename}`
+//         });
+//       }
+//     }
+//   });
+// });
 
 
 // here we catch 404 errors and forward to error handler
@@ -211,17 +217,11 @@ app.use(function(err, req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.resolve(__dirname, 'public')));
 
-app.post('/nft/save', (req, res, next) => {
-  const {nft} = req.body;
-  storeNFT(nft);
-  res.render('about')
-});
-
 async function storeNFT(nft){
   try{
-    const lookup = await NFT.find({nft})
+    const lookup = await NFT.find({"name": nft})
     if (lookup.length==0){
-      const new_nft = new NFT({nft})
+      const new_nft = new NFT({"name" :nft})
       await new_nft.save()
       console.log(nft)
     }
@@ -236,6 +236,7 @@ async function storeNFT(nft){
 
 //functions to see the uploaded images
 app.use('/static', express.static(path.join(__dirname,'uploads')))
+
 
 app.get('/getimages',(req, res) => {
   let images = getImagesFromDir(path.join(__dirname, 'uploads'))
