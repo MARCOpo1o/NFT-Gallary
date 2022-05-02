@@ -270,7 +270,7 @@ function getImagesFromDir(dirPath){
 //  Starting up the server!
 // *********************************************************** //
 //Here we set the port to use between 1024 and 65535  (2^16-1)
-const port = "5500";
+const port = process.env.PORT || '5500';
 app.set("port", port);
 
 // and now we startup the server listening on that port
